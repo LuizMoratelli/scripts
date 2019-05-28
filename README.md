@@ -1,2 +1,2 @@
-# scripts
-Repositório com scri
+# Scripts
+Repositório com scripts de automatização de tarefas
