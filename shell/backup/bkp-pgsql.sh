@@ -84,11 +84,11 @@ if [[ ! -d "${PUBLIC_DIR}/${SITE_DIR}" ]]; then
     exit 1
 fi
 
-DB_USER=$(get-env-var ${SITE_DIR} DB_USERNAME)
-DB_PASS=$(get-env-var ${SITE_DIR} DB_PASSWORD)
-DB_NAME=$(get-env-var ${SITE_DIR} DB_DATABASE)
-DB_HOST=$(get-env-var ${SITE_DIR} DB_HOST)
-DB_PORT=$(get-env-var ${SITE_DIR} DB_PORT)
+DB_USER=$(/usr/sbin/get-env-var ${SITE_DIR} DB_USERNAME)
+DB_PASS=$(/usr/sbin/get-env-var ${SITE_DIR} DB_PASSWORD)
+DB_NAME=$(/usr/sbin/get-env-var ${SITE_DIR} DB_DATABASE)
+DB_HOST=$(/usr/sbin/get-env-var ${SITE_DIR} DB_HOST)
+DB_PORT=$(/usr/sbin/get-env-var ${SITE_DIR} DB_PORT)
 DB_CONF="${DB_HOST}:${DB_PORT}:${DB_NAME}:${DB_USER}:${DB_PASS}"
 
 if ! grep -q ${DB_CONF} "/root/.pgpass"; then
