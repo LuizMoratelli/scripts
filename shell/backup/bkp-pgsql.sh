@@ -16,9 +16,16 @@ log() {
     MSG_DATE=$(date +"%c")
 
     echo "[${MSG_DATE}] ${MSG_INFO}" >> "${LOG_DIR}/error_${LOG_DATE}.log"
+
+    if [ "$2" == true ]; then
+        echo -e "\e[92m${MSG_INFO}\e[0m"
+    else
+        echo -e "\e[31m${MSG_INFO}\e[0m"
+    fi
 }
 
 BACKUP_DIR="/var/www/public_html/database-backup"
+PUBLIC_DIR="/var/www/public_html"
 NOW=$(date +"%Y_%m_%d")
 DISK_AVAILABLE=$(df -B1 / | awk 'NR==2 {print $4}')
 DISK_NEED_MOD=2
@@ -41,14 +48,14 @@ while :; do
             SITE_DIR=${1#*=}
             ;;
         --site=)
-            echo -e '\e[31mÉ obrigatório informar um site\e[0m'
+            log 'É obrigatório informar um site'
             ;;
         --)
             shift
             break
             ;;
         -?*)
-            echo -e '\e[31mOpção desconhecida ignorada\e[0m'
+            log 'Opção desconhecida ignorada'
             ;;
         *)
             break
@@ -58,7 +65,12 @@ while :; do
 done
 
 if [[ -z "$SITE_DIR" ]]; then
-    echo -e "\e[31mÉ obrigatório informar um site\e[0m"
+    log "É obrigatório informar um site"
+    exit 1
+fi
+
+if [[ ! -d "${PUBLIC_DIR}/${SITE_DIR}" ]]; then
+    log "O site informado deve existir"
     exit 1
 fi
 
@@ -74,7 +86,7 @@ if ! grep -q ${DB_CONF} "/root/.pgpass"; then
     chmod 600 "/root/.pgpass"
 fi
 
-DISK_NEED=$(psql -U${DB_USER} -w  ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} -t \
+DISK_NEED=$(psql -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} -t \
                                              -c "SELECT t1.datname, pg_database_size(t1.datname) AS db_size
                                                    FROM pg_database t1
                                                   WHERE t1.datname = '${DB_NAME}'
@@ -82,19 +94,16 @@ DISK_NEED=$(psql -U${DB_USER} -w  ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} -t \
 DISK_NEED_TOTAL=$((${DISK_NEED} * ${DISK_NEED_MOD}))
 
 if [ "$DISK_NEED_TOTAL" -gt "$DISK_AVAILABLE" ]; then
-    echo -e "\e[31mEspaço insuficiente para gerar backup\e[0m"
     log "Espaço insuficiente para gerar backup"
     exit 1
 fi
 
 if [ "$CLEAR" = true ]; then
     $(rm -f ${BACKUP_DIR}/${SITE_DIR}*.sql)
-    echo -e "\e[92mBackups anteriores do site ${SITE_DIR} removidos com sucesso.\e[0m"
-    log "Backups anteriores do site ${SITE_DIR} removidos com sucesso."
+    log "Backups anteriores do site ${SITE_DIR} removidos com sucesso." true
 fi
 
 BACKUP_NAME="${BACKUP_DIR}/${SITE_DIR}_${NOW}.sql"
 
-$(pg_dump -U${DB_USER} -w  ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
-echo -e "\e[92mBackup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_NAME}.\e[0m"
-log "Backup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_NAME}"
+$(pg_dump -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+log "Backup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_NAME}" true
