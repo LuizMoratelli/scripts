@@ -22,3 +22,5 @@ Repositório com scripts de automatização de tarefas
   - http://www.londatiga.net/it/database-it/how-to-use-postgresql-pgdump-in-crontab-without-password/
 ### BASH HEADER
   - http://code.activestate.com/recipes/577862-bash-script-to-create-a-header-for-bash-scripts/
+### GET ALL PARAMETERS EXCEPT FIRST
+  - https://stackoverflow.com/questions/9057387/process-all-arguments-except-the-first-one-in-a-bash-script
