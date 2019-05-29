@@ -20,3 +20,5 @@ Repositório com scripts de automatização de tarefas
   - https://www.postgresql.org/docs/9.3/app-pgdump.html
 ### PGPASS
   - http://www.londatiga.net/it/database-it/how-to-use-postgresql-pgdump-in-crontab-without-password/
+### BASH HEADER
+  - http://code.activestate.com/recipes/577862-bash-script-to-create-a-header-for-bash-scripts/
