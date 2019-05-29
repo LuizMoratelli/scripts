@@ -51,13 +51,13 @@ while :; do
             show_help
             exit
             ;;
-        --clear)
+        --clear|-c)
             CLEAR=true
             ;;
-        --site=?*)
+        --site=?*|-s=?*)
             SITE_DIR=${1#*=}
             ;;
-        --site=)
+        --site=|-s=)
             log 'É obrigatório informar um site'
             ;;
         --)
