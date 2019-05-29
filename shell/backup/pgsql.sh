@@ -1,18 +1,58 @@
 #!/bin/bash
-BACKUP_DIR="/var/www/public_html/database-backup/"
-SITE_DIR=$1
+show_help() {
+cat << EOF
+    Utilização: ${0##*/} [--clear] [--site=DIR]
+    Realiza o backup do banco de dados POSTGRESQL configurado através do arquivo .env
+
+        --clear     remove todos os backups anteriores desse site.
+        --site=DIR  especifica o site que será feito o backup.
+EOF
+}
+
+BACKUP_DIR="/var/www/public_html/database-backup"
+NOW=$(date +"%Y_%m_%d")
+CLEAR=false
 
 if [[ ! -d "$BACKUP_DIR" ]]; then
     $(mkdir -p $BACKUP_DIR)
 fi
+
+while :; do
+    case $1 in
+        -h|-\?|--help)
+            show_help
+            exit
+            ;;
+        --clear)
+            CLEAR=true
+            ;;
+        --site=?*)
+            SITE_DIR=${1#*=}
+            ;;
+        --site=)
+            echo -e '\e[31mÉ obrigatório informar um site\e[0m'
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -?*)
+            echo -e '\e[31mOpção desconhecida ignorada\e[0m'
+            ;;
+        *)
+            break
+    esac
+
+    shift
+done
 
 if [[ -z "$SITE_DIR" ]]; then
     echo -e "\e[31mÉ obrigatório informar um site\e[0m"
     exit 1
 fi
 
-if [ "$2" = true ]; then
-    $(rm -f "${BACKUP_DIR}/${SITE_DIR}*.sql")
+if [ "$CLEAR" = true ]; then
+    $(rm -f ${BACKUP_DIR}/${SITE_DIR}*.sql)
     echo -e "\e[92mBackups anteriores do site ${SITE_DIR} removidos com sucesso.\e[0m"
 fi
 
@@ -28,5 +68,7 @@ if ! grep -q ${DB_CONF} "/root/.pgpass"; then
     chmod 600 "/root/.pgpass"
 fi
 
-$(pg_dump -U${DB_USER} -w  ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_DIR}/${SITE_DIR}_teste2.sql")
-echo -e "\e[92mBackup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_DIR}/${SITE_DIR}.\e[0m"
+BACKUP_NAME="${BACKUP_DIR}/${SITE_DIR}_${NOW}.sql"
+
+$(pg_dump -U${DB_USER} -w  ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+echo -e "\e[92mBackup do site ${SITE_DIR} criado com sucesso. Acesse: "${BACKUP_NAME}".\e[0m"
