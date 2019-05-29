@@ -1,4 +1,14 @@
 #!/bin/bash
+#title           :bkp-pgsql.sh
+#description     :This script will make a backup of postgres database using .env file.
+#author		     :luizmoratelli
+#date            :20190529
+#version         :1.1
+#usage		     :sh mkscript.sh --site=SITEDOTCOM
+#notes           :Download get-env-var and save it in /usr/sbin/get-env-var.
+#bash_version    :4.4.19(1)-release
+#==============================================================================
+
 show_help() {
 cat << EOF
     Utilização: ${0##*/} [--clear] [--site=DIR]
