@@ -3,7 +3,7 @@
 #description     :This script will make a backup of postgres database using .env file.
 #author		     :luizmoratelli
 #date            :20190529
-#version         :1.1
+#version         :1.2
 #usage		     :sh bkp-pgsql.sh --site=SITEDOTCOM
 #notes           :Download get-env-var and save it in /usr/sbin/get-env-var.
 #bash_version    :4.4.19(1)-release
@@ -36,7 +36,7 @@ log() {
 
 BACKUP_DIR="/var/www/public_html/database-backup"
 PUBLIC_DIR="/var/www/public_html"
-NOW=$(date +"%Y_%m_%d")
+NOW=$(date +"%Y_%m_%d_%H%M%S")
 DISK_AVAILABLE=$(df -B1 / | awk 'NR==2 {print $4}')
 DISK_NEED_MOD=2
 CLEAR=false
