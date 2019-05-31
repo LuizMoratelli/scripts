@@ -25,4 +25,6 @@ Repositório com scripts de automatização de tarefas
 ### GET ALL PARAMETERS EXCEPT FIRST
   - https://stackoverflow.com/questions/9057387/process-all-arguments-except-the-first-one-in-a-bash-script
 ### PASS OUTPUT TO COMMAND
+  - https://unix.stackexchange.com/questions/9597/giving-grep-output-to-rm
+### GET ONLY FILENAME FROM LS
   - https://stackoverflow.com/questions/8518750/to-show-only-file-name-without-the-entire-directory-path
