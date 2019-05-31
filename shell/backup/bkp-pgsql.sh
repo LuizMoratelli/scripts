@@ -1,10 +1,10 @@
 #!/bin/bash
 #title           :bkp-pgsql.sh
 #description     :This script will make a backup of postgres database using .env file.
-#author		     :luizmoratelli
-#date            :20190529
+#author          :luizmoratelli
+#date            :20190531
 #version         :1.2
-#usage		     :sh bkp-pgsql.sh --site=SITEDOTCOM
+#usage           :sh bkp-pgsql.sh --s=SITEDOTCOM
 #notes           :Download get-env-var and save it in /usr/sbin/get-env-var.
 #bash_version    :4.4.19(1)-release
 #==============================================================================
@@ -14,18 +14,31 @@ cat << EOF
     Utilização: ${0##*/} [--clear] [--site=DIR]
     Realiza o backup do banco de dados POSTGRESQL configurado através do arquivo .env
 
-        --clear     remove todos os backups anteriores desse site.
-        --site=DIR  especifica o site que será feito o backup.
+        --clear, -c         remove todos os backups anteriores desse site.
+        --site=DIR, -s=DIR  especifica o site que será feito o backup.
 EOF
 }
 
+log_clean() {
+    LOG_DIR=$1
+    LOG_FILE=$2
+
+    ls ${LOG_DIR}/error*.log | xargs -n 1 basename | grep -v ${LOG_FILE} | xargs rm &>/dev/null
+}
+
 log() {
-    LOG_DIR="/var/www/public_html/database-backup"
+    LOG_DIR="/var/www/public_html/database-backup/logs"
     LOG_DATE=$(date +"%Y_%m_%d")
     MSG_INFO=$1
     MSG_DATE=$(date +"%c")
+    LOG_FILE="error_${LOG_DATE}.log"
 
-    echo "[${MSG_DATE}] ${MSG_INFO}" >> "${LOG_DIR}/error_${LOG_DATE}.log"
+    if [[ ! -d "$LOG_DIR" ]]; then
+        $(mkdir -p $LOG_DIR)
+    fi
+
+    log_clean $LOG_DIR $LOG_FILE
+    echo "[${MSG_DATE}] ${MSG_INFO}" >> "${LOG_DIR}/${LOG_FILE}"
 
     if [ "$2" == true ]; then
         echo -e "\e[92m${MSG_INFO}\e[0m"
