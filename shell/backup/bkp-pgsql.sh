@@ -23,7 +23,7 @@ log_clean() {
     LOG_DIR=$1
     LOG_FILE=$2
 
-    ls ${LOG_DIR}/error*.log | xargs -n 1 basename | grep -v ${LOG_FILE} | xargs rm &>/dev/null
+    ls ${LOG_DIR}/error*.log | xargs -n 1 | grep -v ${LOG_FILE} | xargs rm &>/dev/null
 }
 
 log() {
