@@ -128,5 +128,5 @@ fi
 
 BACKUP_NAME="${BACKUP_DIR}/${SITE_DIR}_${NOW}.sql"
 
-$(pg_dump --column-inserts -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+$(pg_dump --column-inserts -O -x -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
 log "Backup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_NAME}" true
