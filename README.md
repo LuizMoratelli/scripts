@@ -28,3 +28,7 @@ Repositório com scripts de automatização de tarefas
   - https://unix.stackexchange.com/questions/9597/giving-grep-output-to-rm
 ### GET ONLY FILENAME FROM LS
   - https://stackoverflow.com/questions/8518750/to-show-only-file-name-without-the-entire-directory-path
+### PG_DUMP WITHOUT OWNER
+  - https://coderwall.com/p/hy8jpa/dump-postgresql-without-owner-and-privileges
+### PG_DUMP INSERTS INSTEAD COPY
+  - https://stackoverflow.com/questions/2857989/using-pg-dump-to-only-get-insert-statements-from-one-table-within-database
