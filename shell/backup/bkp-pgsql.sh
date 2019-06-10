@@ -128,5 +128,19 @@ fi
 
 BACKUP_NAME="${BACKUP_DIR}/${SITE_DIR}_${NOW}.sql"
 
-$(pg_dump --column-inserts -O -x -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+# Test 1 - Export, but using COPY and maintaining OWNER and Privilegies
+#$(pg_dump -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+
+# Test 2 - Export with INSERT instead COPY, but maintaining OWNER and Privilegies
+#$(pg_dump --column-inserts -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+
+# Test 3 - Export with INSERT instead COPY and clean OWNER, but maintaining Privilegies
+#$(pg_dump --column-inserts -O -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+
+# Test 4 - Export with INSERT instead COPY and clean OWNER and Privilegies
+#$(pg_dump --column-inserts -O -x -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+
+$(pg_dump --column-inserts -O -x \
+    -U${DB_USER} -w ${DB_NAME} -h ${DB_HOST} -p${DB_PORT} > "${BACKUP_NAME}")
+
 log "Backup do site ${SITE_DIR} criado com sucesso. Acesse: ${BACKUP_NAME}" true
